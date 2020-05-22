@@ -17,16 +17,12 @@ app.options('/todolist/*', (req, res) => {
   })
 
 const obj = []
-const cobj = []
-
-
+const cobj =[]
+let cityDisplay = ''
 app.set('view engine','ejs')
-
-
 app.get('/visitors',(req,res)=>{
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress || '').split(',')[0]
     console.log(ip)    
-    let cityDisplay = ''
     fetch(`https://js5.c0d3.com/location/api/ip/${ip}`).then(r=>r.json()).then(data=>{
     obj.forEach((e)=>{
     e.current =false
@@ -53,7 +49,8 @@ app.get('/visitors',(req,res)=>{
 
             })}
     // for the obj sent to the template 
-            cityDisplay = data.cityStr   
+            cityDisplay = data.cityStr  
+             
    
     if(!cobj.find((e)=>{
         return e.city===data.cityStr
@@ -73,10 +70,10 @@ app.get('/visitors',(req,res)=>{
         })
     }
 })
-
+console.log(cityDisplay)
 
 res.render('index.ejs',{
-    "city": cityDisplay,
+    "cityDisplay": cityDisplay,
     "cobj": cobj
 })
 })
