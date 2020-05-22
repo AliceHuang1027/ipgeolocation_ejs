@@ -5,7 +5,7 @@
 <!--needs to write the loop or for loop -->
 <% cobj.forEach(function(e)
 {%>
-    <a href="/location/city/"+"<%=e.city%>">
+    <a href="/visitors/<%=e.city%>">
         <h2><%=e.city%> - <%=e.count%></h2></a>
 
 <%});%>
@@ -16,8 +16,10 @@ const container = document.querySelector(".container")
 const list = []
 const scriptContainer = document.querySelector(".scriptContainer")
 const getData = ()=>{
-fetch('./api/visitors').then(r=>{ return r.json()}).then((data)=>{
+
+fetch('/api/visitors').then(r=>{ return r.json()}).then((data)=>{
         console.log('data is',data)
+        
        data.forEach((e)=>{
            list.push(e)
        }) 
@@ -32,6 +34,7 @@ fetch('./api/visitors').then(r=>{ return r.json()}).then((data)=>{
         
     }
     getData()
+
     function myMap() {
         var map
         console.log("list is", list)
