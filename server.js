@@ -27,17 +27,7 @@ app.get('/visitors',(req,res)=>{
     obj.forEach((e)=>{
     e.current =false
     })       
-       if(!obj.find(e=>{
-            return e.ip === ip
-        })){
-            obj.push({
-                "ip":ip,
-                "count":1,
-                "ll":data.ll,
-                "cityStr":data.cityStr,
-  		        "current":true              
-            })
-        } 
+       
         if(obj.find(e=>{
             return e.ip ===ip
         }))
@@ -48,18 +38,20 @@ app.get('/visitors',(req,res)=>{
                 }
 
             })}
+            if(!obj.find(e=>{
+                return e.ip === ip
+            })){
+                obj.push({
+                    "ip":ip,
+                    "count":1,
+                    "ll":data.ll,
+                    "cityStr":data.cityStr,
+                      "current":true              
+                })
+            } 
     // for the obj sent to the template 
             cityDisplay = data.cityStr  
              
-   
-    if(!cobj.find((e)=>{
-        return e.city===data.cityStr
-    })){
-        cobj.push({
-            "city":data.cityStr,
-            "count":1
-        })
-    }
     if(cobj.find((e)=>{
         return e.city===data.cityStr
     })){
@@ -69,13 +61,25 @@ app.get('/visitors',(req,res)=>{
             }
         })
     }
+    if(!cobj.find((e)=>{
+        return e.city===data.cityStr
+    })){
+        cobj.push({
+            "city":data.cityStr,
+            "count":1
+        })
+    }
+    
+}).then((data)=>{
+    console.log(cityDisplay)
+    res.render('index.ejs',{
+        "cityDisplay": cityDisplay,
+        "cobj": cobj
+    })
 })
-console.log(cityDisplay)
 
-res.render('index.ejs',{
-    "cityDisplay": cityDisplay,
-    "cobj": cobj
-})
+
+
 })
 
 app.get('/api/visitors',(req,res)=>{
