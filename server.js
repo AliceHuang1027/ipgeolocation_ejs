@@ -3,7 +3,7 @@ const app = express()
 
 const fetch = require('node-fetch')
 const port = process.env.PORT || 8900
-app.use(express.static(__dirname+'/public'))
+app.use(express.static(__dirname+'/views'))
 app.use(express.json({limit:'10mb'}))
 app.options('/todolist/*', (req, res) => {
     res.header('Access-Control-Allow-Credentials', true)
