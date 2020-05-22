@@ -18,6 +18,7 @@ app.options('/todolist/*', (req, res) => {
 
 const obj = []
 const cobj =[]
+const sobj=[]
 let cityDisplay = ''
 app.set('view engine','ejs')
 app.get('/visitors',(req,res)=>{
@@ -49,7 +50,14 @@ app.get('/visitors',(req,res)=>{
                       "current":true              
                 })
             } 
-    // for the obj sent to the template 
+            // a sub list whose city is the same as the current ip's city
+            sobj.splice(0,sobj.length)
+            obj.forEach((e)=>{
+                if(e.ip === ip){
+                    sobj.push(e)
+                }
+            })
+             // for the obj sent to the template 
             cityDisplay = data.cityStr  
              
     if(cobj.find((e)=>{
@@ -82,7 +90,48 @@ app.get('/visitors',(req,res)=>{
 
 })
 
-app.get('/api/visitors',(req,res)=>{
-    res.json(obj)
+app.get('/visitors/:cityname',(req,res)=>{
+    const cityname = req.params.cityname
+    console.log("sobj cityname",cityname)
+    sobj.splice(0,sobj.length)
+    
+    obj.forEach((e)=>{
+        if(e.cityStr === cityname){
+            sobj.push(e)
+        }
+    })
+
+    sobj.forEach((e,i)=>{
+        if(i!==0){
+            e.current=false}
+        if(i===0){e.current=true}    
+    })
+    if(sobj[0].cityStr===cityDisplay){
+        obj.forEach((e)=>{
+            if (e.cityStr ===cityDisplay ){
+                e.count +=1
+            }
+
+        })
+        cobj.forEach(m=>{
+            if(m.city===cityDisplay){
+                m.count+=1
+            }
+        })
+
+    }
+
+    console.log(sobj)
+    res.render('index.ejs',{
+        "cityDisplay": cityDisplay,
+        "cobj": cobj
+    })
+
 })
+
+app.get('/api/visitors',(req,res)=>{
+    console.log("fetch em",sobj)
+    res.json(sobj)
+})
+
 app.listen(port,()=>{console.log(`listening on port ${port}`)})
